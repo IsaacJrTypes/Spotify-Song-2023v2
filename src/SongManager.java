@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Scanner;
@@ -31,7 +30,7 @@ class SongManager implements SongManagerInterface {
      */
     @Override
     public int getYearCount() {
-        return years.length;
+        return this.years.length;
     }
 
     /**
@@ -78,6 +77,13 @@ class SongManager implements SongManagerInterface {
      */
     @Override
     public int getSongCount(String year) {
+        int index = 0;
+        for (String count: yearCount) {
+            if (years[index].contains(year)) {
+                return Integer.parseInt(count);
+            }
+            index++;
+        }
         return 0;
     }
 
@@ -89,9 +95,14 @@ class SongManager implements SongManagerInterface {
      * @return song at that array position
      */
     @Override
-    public Song getSong(int yearIndex, int songIndex) {
-        return null;
-    }
+        public Song getSong(int yearIndex, int songIndex) {
+            if (yearIndex >= 0 && yearIndex < years.length && songIndex >= 0 && songIndex < sortedByYearSongsWithSongIndexes[yearIndex].length) {
+                return sortedByYearSongsWithSongIndexes[yearIndex][songIndex];
+            } else {
+               throw new RuntimeException("Could not find Song in songmanager.java");
+            }
+        }
+
 
     /**
      * Retrieves a copy of the song array for the release year at the specified index
@@ -101,7 +112,11 @@ class SongManager implements SongManagerInterface {
      */
     @Override
     public Song[] getSongs(int yearIndex) {
-        return new Song[0];
+        if (yearIndex >= 0 && yearIndex < getYearCount()) {
+            return Arrays.copyOf(sortedByYearSongsWithSongIndexes[yearIndex],getSongCount(yearIndex));
+        } else {
+            return new Song[0];
+        }
     }
 
     /**
@@ -112,7 +127,17 @@ class SongManager implements SongManagerInterface {
      */
     @Override
     public int findSongYear(String trackName) {
-        return 0;
+        int index = -1;
+        for(int year = 0; year <years.length; year++ ) {
+            for(int songIndex = 0; songIndex< getSongCount(year); songIndex++) {
+                String trackTitle = sortedByYearSongsWithSongIndexes[year][songIndex].getTrackName();
+                if(trackTitle.equals(trackName)){
+                    return year;
+                }
+
+            }
+        }
+        return index;
     }
 
 
@@ -217,15 +242,32 @@ class SongManager implements SongManagerInterface {
         for (int i = 0; i < years.length; i++) {
             int yearSongCount = Integer.parseInt(yearCount[i]);
             songArraysForReference[i] = new Song[yearSongCount];
-            System.out.print("yearI: "+i);
+           // System.out.print("yearI: "+i);
             for (int j = 0; j < yearSongCount; j++) {
                 songArraysForReference[i][j] = sortedSongsByYear[songIndex];
-                System.out.print("yearSongCount: "+yearSongCount+"Song:"+sortedSongsByYear[songIndex].toString());
+              //  System.out.print("yearSongCount: "+yearSongCount+"Song:"+sortedSongsByYear[songIndex].toString());
                 songIndex++;
             }
-            System.out.println();
+            //sort by alphabetized
+            songArraysForReference[i] = sortSongsBy(songArraysForReference[i],"trackName");
+            //System.out.println(Arrays.deepToString(songArraysForReference));
+
+           // System.out.println();
         }
         this.sortedByYearSongsWithSongIndexes = songArraysForReference;
     }
+    public int findYearIndex(String findYear) {
+        int index = 0;
+        for (String year : years) {
+            //System.out.println("i: "+index+", year:"+year);
+            if (!year.contains(findYear)) {
+                index++;
+            } else {
+                return index;
+            }
+        }
+        return -1;
+    }
+
 
 }

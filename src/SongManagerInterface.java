@@ -4,7 +4,8 @@ public interface SongManagerInterface {
 
     /**
      * Retrieves the count of release years
-     * @return      count of release years
+     *
+     * @return count of release years
      */
     public int getYearCount();
 
