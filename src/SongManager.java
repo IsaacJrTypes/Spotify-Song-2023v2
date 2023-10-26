@@ -1,3 +1,7 @@
+/**
+ * A class that manages songs and provides various functionalities in
+ * handling songs
+ */
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 
@@ -12,15 +16,14 @@ import java.util.Scanner;
 class SongManager implements SongManagerInterface {
     private String[] years;
     private String[] yearCount;
-    private Song[] sortedSongsByYear;
-    private Song[] alphabatizedSongsInYear;
     private Song[][] sortedByYearSongsWithSongIndexes;
+    /**
+     * Default constructor for the SongManager class
+     */
     public SongManager() {
-        this.alphabatizedSongsInYear = null;
         this.years = null;
         this.yearCount = null;
         this.sortedByYearSongsWithSongIndexes = null;
-        this.sortedSongsByYear = null;
     }
 
     /**
@@ -140,10 +143,17 @@ class SongManager implements SongManagerInterface {
         return index;
     }
 
-
+    /**
+     * Reads the contents of a given song CSV file and creates an array of Song objects.
+     *
+     * @param songCSV The FileReader representing the song CSV file.
+     * @param songCount The total count of songs in the CSV file.
+     * @return An array of Song objects.
+     * @throws CsvValidationException If there's an issue validating the CSV.
+     * @throws IOException If there's an issue reading the file.
+     */
     static Song[] createSongArr(FileReader songCSV, int songCount) throws CsvValidationException, IOException {
         CSVReader songReader = new CSVReader(songCSV);
-        //System.out.println(songReader.verifyReader());
 
         Song[] Songs = new Song[songCount];
         int index = 0; // skips header
@@ -160,15 +170,10 @@ class SongManager implements SongManagerInterface {
                 String releasedYear = line[3].trim();
                 String releasedMonth =line[4].trim();
                 String releasedDay = line[5].trim();
-                String totalNumberOfStreamsOnSpotify = line[8].trim();
-                if(!isNumeric(totalNumberOfStreamsOnSpotify)){
-                    totalNumberOfStreamsOnSpotify = "0";
-                }
-//String trackName, String artistsName, String releasedYear, String releasedMonth,
-//                   String releasedDay, String totalNumberOfStreamsOnSpotify
+                String totalNumberOfStreamsOnSpotify = commaNumberFormatter(line[8].trim());
+
                 Songs[index] = new Song(trackName, artistName, releasedYear,releasedMonth, releasedDay, totalNumberOfStreamsOnSpotify);
-               // System.out.println(Songs[index].toString());
-                //System.out.println(index);
+
                 index++;
 
             }
@@ -176,14 +181,19 @@ class SongManager implements SongManagerInterface {
         }
         return Songs;
     }
-
-
         //removes bad encoding
 //        private static String sanitize(String input) {
 //            return input.replace("�", "");
 //        }
-
-
+    /**
+     * Converts the contents of a file into arrays representing years and
+     * heir counts.
+     *
+     * @param countByYearCSV The file containing count by year data.
+     * @return An array of two arrays: the first contains years and the
+     * second contains their respective counts.
+     * @throws FileNotFoundException If the provided file is not found.
+     */
     static Object[] convertFileContentToArrays(File countByYearCSV) throws FileNotFoundException {
         Scanner inputStream = new Scanner(countByYearCSV);
         String line;
@@ -208,6 +218,12 @@ class SongManager implements SongManagerInterface {
         inputStream.close();
         return new Object[]{years, yearCount};
     }
+    /**
+     * Checks if a given string can be converted to an integer.
+     *
+     * @param data The string to check.
+     * @return True if the string can be converted to an integer, false otherwise.
+     */
     public static boolean isNumeric(String data) {
         try {
             Integer.parseInt(data);
@@ -216,13 +232,36 @@ class SongManager implements SongManagerInterface {
             return false;
         }
     }
+    private static String commaNumberFormatter(String number) {
+        StringBuilder numWithCommas = new StringBuilder(number);
+        for (int i = number.length() - 3; i > 0; i -= 3) {
+            numWithCommas.insert(i, ",");
+        }
+        return numWithCommas.toString();
+    }
+    /**
+     * Sets the array of years
+     *
+     * @param years Array of years to set
+     */
     public void setYearArr(String[] years) {
         this.years = years;
     }
-
+    /**
+     * Sets the array of year counts
+     *
+     * @param yearCount Array of year counts to set
+     */
     public void setYearCountArr(String[] yearCount) {
         this.yearCount = yearCount;
     }
+    /**
+     * Sorts an array of Song objects based on a given category
+     *
+     * @param songsArr Array of Song objects
+     * @param category The category based on which songs should be sorted
+     * @return A sorted array of Song objects
+     */
     public static Song[] sortSongsBy(Song[] songsArr, String category) {
         switch (category) {
             case "releasedYear":
@@ -236,6 +275,11 @@ class SongManager implements SongManagerInterface {
         }
         return songsArr;
     }
+    /**
+     * Sets the sorted array of songs for each year
+     *
+     * @param sortedSongsByYear The sorted array of songs to set
+     */
     public void setSongsSortedByYearWithSongIndex(Song[] sortedSongsByYear) {
         Song[][] songArraysForReference = new Song[years.length][];
         int songIndex = 0;
@@ -245,21 +289,23 @@ class SongManager implements SongManagerInterface {
            // System.out.print("yearI: "+i);
             for (int j = 0; j < yearSongCount; j++) {
                 songArraysForReference[i][j] = sortedSongsByYear[songIndex];
-              //  System.out.print("yearSongCount: "+yearSongCount+"Song:"+sortedSongsByYear[songIndex].toString());
                 songIndex++;
             }
             //sort by alphabetized
             songArraysForReference[i] = sortSongsBy(songArraysForReference[i],"trackName");
-            //System.out.println(Arrays.deepToString(songArraysForReference));
 
-           // System.out.println();
         }
         this.sortedByYearSongsWithSongIndexes = songArraysForReference;
     }
+    /**
+     * Finds the index of a given year.
+     *
+     * @param findYear The year to find.
+     * @return The index of the year in the array, or -1 if not found.
+     */
     public int findYearIndex(String findYear) {
         int index = 0;
         for (String year : years) {
-            //System.out.println("i: "+index+", year:"+year);
             if (!year.contains(findYear)) {
                 index++;
             } else {
@@ -268,6 +314,4 @@ class SongManager implements SongManagerInterface {
         }
         return -1;
     }
-
-
 }

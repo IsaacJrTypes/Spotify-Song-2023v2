@@ -1,3 +1,6 @@
+/**
+ * GUIFrame class responsible for creating and managing the main GUI frame for the popular songs of 2023
+ */
 import com.opencsv.exceptions.CsvValidationException;
 
 import javax.swing.*;
@@ -8,21 +11,21 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
 
 public class GUIFrame {
     // create the main JFrame
     private SongManager manager = null;
     private boolean loadedData = false;
-
-    private int yearIndex = 0;
     private int songTraverser = 0;
 
-
+        /**
+        * Constructor responsible for initializing the main GUI frame and its
+         * components
+         */
     public GUIFrame() {
         try {
-            JFrame mainFrame = new JFrame("SongManager");
+            JFrame mainFrame = new JFrame("Popular Songs of 2023");
+            mainFrame.setName("mainFrame");
             mainFrame.setSize(500, 575);
             // create a load, prev, next buttons
             JPanel controlPanel = new JPanel(new GridLayout(1, 3, 0, 0));
@@ -60,9 +63,10 @@ public class GUIFrame {
             comboBox.setEnabled(false);
 
 
-            JLabel songStats = new JLabel("Null");
+            JLabel songStats = new JLabel("");
+            songStats.setName("songStats");
             yearInfoPanel.add(songStats);
-            songStats.setEnabled(false);
+            songStats.setEnabled(true);
 
             loadBtn.addActionListener(new ActionListener() {
                 @Override
@@ -96,25 +100,24 @@ public class GUIFrame {
                     if (selectedItem != null) {
                         String selectedYear = selectedItem.toString();
                         int indexOfYear = manager.findYearIndex(selectedYear);
-                       // System.out.println("Selected Year: " + selectedYear);
-                       // System.out.println("Index of Year: " + indexOfYear);
-
-
-                        // Debug: Print the contents of the manager object
-                       // System.out.println(Arrays.toString(manager.getSongs(indexOfYear)));
-                       // System.out.println("Get song count value: "+manager.getSongCount(selectedYear));
-
                         Song[] copySongsArr = manager.getSongs(indexOfYear);
-
-                        //System.out.println("Number of Songs: " + copySongsArr.length);
-
-//                        Song[] naturalOrderSongList = SongManager.sortSongsBy(copySongsArr,"trackName");
-//                        System.out.println(naturalOrderSongList.length);
-
-
-                        //manager.setAlphabatizedSongsInYear(songsOfYear);
-                        //System.out.println(Arrays.toString(SongsArr))
                         songTraverser = 0;
+
+                        //get and set Label, title
+                      JLabel songInfoLabel =  getLabelByName(yearInfoPanel,"songStats");
+                        if (songInfoLabel != null) {
+                            int songsInYear = manager.getSongCount(selectedYear);
+                            int totalSongs = manager.getSongCount();
+                            double percentage = roundToHundredths(((double) songsInYear / totalSongs));
+                            //set %, song in year, total songs
+                            songInfoLabel.setText(percentage+"% | "+songsInYear +" of "+ totalSongs+ " total songs");
+
+                            int songNum = songTraverser+1;
+                            mainFrame.setTitle("Songs | "+songNum+ " of "+songsInYear+" songs");
+                        } else {
+                            throw new RuntimeException("Can't find label");
+                        }
+
 
                         //setPanels
                         trackPanel.setText(copySongsArr[songTraverser].getTrackName());
@@ -127,7 +130,81 @@ public class GUIFrame {
                 }
             });
 
+            nextBtn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    //System.out.println(e.getActionCommand());
+                    Object selectedItem = comboBox.getSelectedItem();
+                    if (selectedItem != null) {
+                        String selectedYear = selectedItem.toString();
+                        System.out.println(selectedYear);
+                        int yearIndex = manager.findYearIndex(selectedYear);
+                        //System.out.println("year: " + yearIndex + ", getSongCount" + manager.getSongCount(yearIndex));
+                        int endOfSongArray = manager.getSongCount(yearIndex) - 1;
+                        if (songTraverser >= 0 && songTraverser < endOfSongArray) {
+                            songTraverser++;
+                            System.out.println(songTraverser);
+                            //setPanels
+                            trackPanel.setText(manager.getSong(yearIndex,songTraverser).getTrackName());
+                            artistPanel.setText(manager.getSong(yearIndex,songTraverser).getArtistName());
+                            datePanel.setText(manager.getSong(yearIndex,songTraverser).getReleaseDate());
+                            streamsPanel.setText(manager.getSong(yearIndex,songTraverser).getTotalStreams());
+                        }
+                        //get and set Label, title
+                        JLabel songInfoLabel =  getLabelByName(yearInfoPanel,"songStats");
+                        if (songInfoLabel != null) {
+                            int songsInYear = manager.getSongCount(selectedYear);
+                            int totalSongs = manager.getSongCount();
+                            double percentage = roundToHundredths(((double) songsInYear / totalSongs));
+                            //set %, song in year, total songs
+                            songInfoLabel.setText(percentage+"% | "+songsInYear +" of "+ totalSongs+ " total songs");
 
+                            int songNum = songTraverser+1;
+                            mainFrame.setTitle("Songs | "+songNum+ " of "+songsInYear+" songs");
+                        } else {
+                            throw new RuntimeException("Can't find label");
+                        }
+                    }
+                }
+            });
+
+
+             prevBtn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    //System.out.println(e.getActionCommand());
+                    Object selectedItem = comboBox.getSelectedItem();
+                    if (selectedItem != null) {
+                        String selectedYear = selectedItem.toString();
+                        System.out.println(selectedYear);
+                        int yearIndex = manager.findYearIndex(selectedYear);
+
+                        if (songTraverser > 0 ) {
+                            songTraverser--;
+                            System.out.println(songTraverser);
+                            //setPanels
+                            trackPanel.setText(manager.getSong(yearIndex,songTraverser).getTrackName());
+                            artistPanel.setText(manager.getSong(yearIndex,songTraverser).getArtistName());
+                            datePanel.setText(manager.getSong(yearIndex,songTraverser).getReleaseDate());
+                            streamsPanel.setText(manager.getSong(yearIndex,songTraverser).getTotalStreams());
+                        }
+                        //get and set Label, title
+                        JLabel songInfoLabel =  getLabelByName(yearInfoPanel,"songStats");
+                        if (songInfoLabel != null) {
+                            int songsInYear = manager.getSongCount(selectedYear);
+                            int totalSongs = manager.getSongCount();
+                            double percentage = roundToHundredths(((double) songsInYear / totalSongs));
+                            //set %, song in year, total songs
+                            songInfoLabel.setText(percentage+"% | "+songsInYear +" of "+ totalSongs+ " total songs");
+
+                            int songNum = songTraverser+1;
+                            mainFrame.setTitle("Songs | "+songNum+ " of "+songsInYear+" songs");
+                        } else {
+                            throw new RuntimeException("Can't find label");
+                        }
+                    }
+                }
+            });
 
 
 
@@ -141,7 +218,14 @@ public class GUIFrame {
 
 
     }
-
+    /**
+     * Create label and text field panel with given label and name
+     *
+     * @param songInfoPanel Panel to which the components will be added
+     * @param label label text
+     * @param setName name for both label and text field
+     * @return The created text field.
+     */
     private static JTextField createLabelTextField(JPanel songInfoPanel, String label, String setName) {
         JLabel trackLabel = new JLabel(label);
         JTextField trackField = new JTextField("", 0);
@@ -153,7 +237,14 @@ public class GUIFrame {
         return trackField;
     }
 
-
+    /**
+     * Create a button with the given label and set its enabled status
+     *
+     * @param controlPanel The panel to which the button will be added
+     * @param controlBtn The label of the button
+     * @param enable The enabled status of the button
+     * @return The created button
+     */
     private JButton createButton(JPanel controlPanel, String controlBtn, boolean enable) {
         //create button, add to panel
         JButton btn = new JButton(controlBtn);
@@ -162,8 +253,34 @@ public class GUIFrame {
         btn.setEnabled(enable);
         return btn;
     }
-
-
+    /**
+     * Retrieves a JLabel by its name from a given container
+     *
+     * @param container The container from which the JLabel is retrieved
+     * @param name The name of the JLabel to retrieve
+     * @return The JLabel if found, null otherwise
+     */
+    public static JLabel getLabelByName(Container container, String name) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JLabel && name.equals(component.getName())) {
+                return (JLabel) component;
+            }
+        }
+        return null;
+    }
+    /**
+     * Rounds a given double value to two decimal places
+     *
+     * @param value The double value to be rounded
+     * @return The rounded double value
+     */
+    private static double roundToHundredths(double value) {
+        return Math.round(value * 10000) / 100.0; // multiplying by 10000 and dividing by 100 to get two decimal places.
+    }
+    /**
+     * Initializes the SongManager and loads song data from CSV files.
+     * Returns appropriate exception.
+     */
     private void initiateSongManager() {
 
         try {

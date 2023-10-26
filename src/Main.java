@@ -1,10 +1,8 @@
-import com.opencsv.exceptions.CsvValidationException;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
+/**
+* Description: Application uses reads two csv files and uses the data
+ * to organize and create a GUI
+ *
+* */
 public class Main {
     public static void main(String[] args) {
         GUIFrame f = new GUIFrame();
