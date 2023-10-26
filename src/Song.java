@@ -9,12 +9,12 @@ import java.util.Objects;
  *
  */
 public record Song(String trackName, String artistsName, String releasedYear, String releasedMonth,
-                   String releasedDay, String totalNumberOfStreamsOnSpotify) {
+                   String releasedDay, String totalNumberOfStreamsOnSpotify, String danceability) {
 
 
     public Song {
         //checks if there is null entry or has white space
-        if (trackName == null || trackName.isBlank() || artistsName == null || artistsName.isBlank() || releasedYear == null || releasedYear.isBlank() || releasedMonth == null || releasedMonth.isBlank() || releasedDay == null || releasedDay.isBlank() || totalNumberOfStreamsOnSpotify == null || totalNumberOfStreamsOnSpotify.isBlank()) {
+        if (trackName == null || trackName.isBlank() || artistsName == null || artistsName.isBlank() || releasedYear == null || releasedYear.isBlank() || releasedMonth == null || releasedMonth.isBlank() || releasedDay == null || releasedDay.isBlank() || totalNumberOfStreamsOnSpotify == null || totalNumberOfStreamsOnSpotify.isBlank() || danceability == null || danceability.isBlank()){
             throw new IllegalArgumentException("Fields must not be empty");
         }
     }
@@ -25,7 +25,7 @@ public record Song(String trackName, String artistsName, String releasedYear, St
      */
     @Override
     public String toString() {
-        return "trackName: " + this.trackName + ", artistName: " + this.artistsName + ", releasedYear: " + this.releasedYear + ", releasedMonth: " + this.releasedMonth + ", releasedDay: " + this.releasedDay + ", totalNumStreamsSpot: " + this.totalNumberOfStreamsOnSpotify;
+        return "trackName: " + this.trackName + ", artistName: " + this.artistsName + ", releasedYear: " + this.releasedYear + ", releasedMonth: " + this.releasedMonth + ", releasedDay: " + this.releasedDay + ", totalNumStreamsSpot: " + this.totalNumberOfStreamsOnSpotify + this.danceability;
     }
     /**
      * Checks the equality of this song with another object.
@@ -44,7 +44,13 @@ public record Song(String trackName, String artistsName, String releasedYear, St
             return false;
         }
         Song argSong = (Song) obj;
-        return trackName.equals(argSong.trackName) && artistsName.equals(argSong.artistsName) && releasedYear.equals(argSong.releasedYear) && releasedMonth.equals(argSong.releasedMonth) && releasedDay.equals(argSong.releasedDay) && totalNumberOfStreamsOnSpotify.equals(argSong.totalNumberOfStreamsOnSpotify);
+        return trackName.equals(argSong.trackName) &&
+                artistsName.equals(argSong.artistsName) &&
+                releasedYear.equals(argSong.releasedYear) &&
+                releasedMonth.equals(argSong.releasedMonth) &&
+                releasedDay.equals(argSong.releasedDay) &&
+                totalNumberOfStreamsOnSpotify.equals(argSong.totalNumberOfStreamsOnSpotify) &&
+                danceability.equals(argSong.danceability);
     }
     /**
      * Computes the hash code for this song based on string values
@@ -54,7 +60,7 @@ public record Song(String trackName, String artistsName, String releasedYear, St
     //Override hashcode
     @Override
     public int hashCode() {
-        return Objects.hash(trackName, artistsName, releasedYear, releasedMonth, releasedDay, totalNumberOfStreamsOnSpotify);
+        return Objects.hash(trackName, artistsName, releasedYear, releasedMonth, releasedDay, totalNumberOfStreamsOnSpotify,danceability);
     }
     /**
      * Retrieves the year the song was released
@@ -99,5 +105,13 @@ public record Song(String trackName, String artistsName, String releasedYear, St
      */
     public String getTotalStreams() {
         return this.totalNumberOfStreamsOnSpotify;
+    }
+    /**
+     * Retrieves the danceability percentage of the song.
+     *
+     * @return the danceability of the song.
+     */
+     public String getDanceability() {
+        return this.danceability;
     }
 }

@@ -14,9 +14,9 @@ public class SongManagerTests {
         songManager = new SongManager();
         // Mock data for songs
         mockSongs = new Song[]{
-                new Song("song1", "artist1", "1990", "1", "1", "1000"),
-                new Song("song2", "artist2", "2000", "2", "2", "2000"),
-                new Song("song3", "artist3", "2001", "3", "3", "3000")
+                new Song("song1", "artist1", "1990", "1", "1", "1000","68"),
+                new Song("song2", "artist2", "2000", "2", "2", "2000","69"),
+                new Song("song3", "artist3", "2001", "3", "3", "3000","70")
         };
         songManager.setYearArr(new String[]{"1990","2000","2001"});
         songManager.setYearCountArr(new String[]{"1","1","1"});

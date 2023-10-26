@@ -26,11 +26,14 @@ public class GUIFrame {
         try {
             JFrame mainFrame = new JFrame("Popular Songs of 2023");
             mainFrame.setName("mainFrame");
-            mainFrame.setSize(500, 375);
+            mainFrame.setSize(500, 275);
+            mainFrame.setBackground(Color.LIGHT_GRAY);
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
             // create a load, prev, next buttons
             JPanel controlPanel = new JPanel(new GridLayout(1, 3, 0, 0));
             controlPanel.setBounds(0, 10, 500, 40);
-            controlPanel.setBackground(Color.cyan);
+            //controlPanel.setBackground(Color.cyan);
             mainFrame.add(controlPanel);
             String[] controlBtns = {"Load", "Prev", "Next"};
 
@@ -40,9 +43,9 @@ public class GUIFrame {
             JButton nextBtn = createButton(controlPanel, controlBtns[2], false);
 
             //create label and text field for song info
-            JPanel songInfoPanel = new JPanel(new GridLayout(4, 2));
-            songInfoPanel.setBounds(5, 120, 495, 100);
-            songInfoPanel.setBackground(Color.pink);
+            JPanel songInfoPanel = new JPanel(new GridLayout(5, 2));
+            songInfoPanel.setBounds(5, 110, 495, 100);
+            //songInfoPanel.setBackground(Color.pink);
             mainFrame.add(songInfoPanel);
 
             //add label and textfield for songs
@@ -50,12 +53,13 @@ public class GUIFrame {
             JTextField artistPanel = createLabelTextField(songInfoPanel, "Artist(s):", "artistName");
             JTextField datePanel = createLabelTextField(songInfoPanel, "Released Date:", "releasedDate");
             JTextField streamsPanel = createLabelTextField(songInfoPanel, "Total Streams:", "totalStreams");
+            JTextField dancePanel = createLabelTextField(songInfoPanel, "Danceability %:", "danceability");
 
 
             //Create combo box with info panel
-            JPanel yearInfoPanel = new JPanel(new GridLayout(1, 2, 0, 0));
+            JPanel yearInfoPanel = new JPanel(new GridLayout(1, 2, 0, 1));
             yearInfoPanel.setBounds(0, 50, 500, 40);
-            yearInfoPanel.setBackground(Color.gray);
+            //yearInfoPanel.setBackground(Color.gray);
             mainFrame.add(yearInfoPanel);
 
             JComboBox<String> comboBox = new JComboBox<>();
@@ -86,9 +90,6 @@ public class GUIFrame {
                     songStats.setEnabled(true);
 
                     songTraverser = 0;
-
-
-
                 }
             });
 
@@ -124,6 +125,7 @@ public class GUIFrame {
                         artistPanel.setText(copySongsArr[songTraverser].getArtistName());
                         datePanel.setText(copySongsArr[songTraverser].getReleaseDate());
                         streamsPanel.setText(copySongsArr[songTraverser].getTotalStreams());
+                        dancePanel.setText(copySongsArr[songTraverser].getDanceability());
 
                     }
 
@@ -137,18 +139,19 @@ public class GUIFrame {
                     Object selectedItem = comboBox.getSelectedItem();
                     if (selectedItem != null) {
                         String selectedYear = selectedItem.toString();
-                        System.out.println(selectedYear);
+                        //System.out.println(selectedYear);
                         int yearIndex = manager.findYearIndex(selectedYear);
                         //System.out.println("year: " + yearIndex + ", getSongCount" + manager.getSongCount(yearIndex));
                         int endOfSongArray = manager.getSongCount(yearIndex) - 1;
                         if (songTraverser >= 0 && songTraverser < endOfSongArray) {
                             songTraverser++;
-                            System.out.println(songTraverser);
+                            //System.out.println(songTraverser);
                             //setPanels
                             trackPanel.setText(manager.getSong(yearIndex,songTraverser).getTrackName());
                             artistPanel.setText(manager.getSong(yearIndex,songTraverser).getArtistName());
                             datePanel.setText(manager.getSong(yearIndex,songTraverser).getReleaseDate());
                             streamsPanel.setText(manager.getSong(yearIndex,songTraverser).getTotalStreams());
+                            dancePanel.setText(manager.getSong(yearIndex,songTraverser).getDanceability());
                         }
                         //get and set Label, title
                         JLabel songInfoLabel =  getLabelByName(yearInfoPanel,"songStats");
@@ -176,17 +179,18 @@ public class GUIFrame {
                     Object selectedItem = comboBox.getSelectedItem();
                     if (selectedItem != null) {
                         String selectedYear = selectedItem.toString();
-                        System.out.println(selectedYear);
+                        //System.out.println(selectedYear);
                         int yearIndex = manager.findYearIndex(selectedYear);
 
                         if (songTraverser > 0 ) {
                             songTraverser--;
-                            System.out.println(songTraverser);
+                            //System.out.println(songTraverser);
                             //setPanels
                             trackPanel.setText(manager.getSong(yearIndex,songTraverser).getTrackName());
                             artistPanel.setText(manager.getSong(yearIndex,songTraverser).getArtistName());
                             datePanel.setText(manager.getSong(yearIndex,songTraverser).getReleaseDate());
                             streamsPanel.setText(manager.getSong(yearIndex,songTraverser).getTotalStreams());
+                            dancePanel.setText(manager.getSong(yearIndex,songTraverser).getDanceability());
                         }
                         //get and set Label, title
                         JLabel songInfoLabel =  getLabelByName(yearInfoPanel,"songStats");
@@ -212,7 +216,8 @@ public class GUIFrame {
             mainFrame.setLayout(null);
             mainFrame.setVisible(true);
             mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        } catch (NullPointerException e3) {
+        } catch (NullPointerException | ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException e3) {
             e3.printStackTrace();
         }
 

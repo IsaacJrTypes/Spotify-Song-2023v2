@@ -171,8 +171,9 @@ class SongManager implements SongManagerInterface {
                 String releasedMonth =line[4].trim();
                 String releasedDay = line[5].trim();
                 String totalNumberOfStreamsOnSpotify = commaNumberFormatter(line[8].trim());
+                String danceability = line[17].trim();
 
-                Songs[index] = new Song(trackName, artistName, releasedYear,releasedMonth, releasedDay, totalNumberOfStreamsOnSpotify);
+                Songs[index] = new Song(trackName, artistName, releasedYear,releasedMonth, releasedDay, totalNumberOfStreamsOnSpotify,danceability);
 
                 index++;
 
