@@ -26,10 +26,10 @@ public class GUIFrame {
         try {
             JFrame mainFrame = new JFrame("Popular Songs of 2023");
             mainFrame.setName("mainFrame");
-            mainFrame.setSize(500, 575);
+            mainFrame.setSize(500, 375);
             // create a load, prev, next buttons
             JPanel controlPanel = new JPanel(new GridLayout(1, 3, 0, 0));
-            controlPanel.setBounds(0, 50, 500, 40);
+            controlPanel.setBounds(0, 10, 500, 40);
             controlPanel.setBackground(Color.cyan);
             mainFrame.add(controlPanel);
             String[] controlBtns = {"Load", "Prev", "Next"};
@@ -41,7 +41,7 @@ public class GUIFrame {
 
             //create label and text field for song info
             JPanel songInfoPanel = new JPanel(new GridLayout(4, 2));
-            songInfoPanel.setBounds(0, 200, 450, 270);
+            songInfoPanel.setBounds(5, 120, 495, 100);
             songInfoPanel.setBackground(Color.pink);
             mainFrame.add(songInfoPanel);
 
@@ -54,7 +54,7 @@ public class GUIFrame {
 
             //Create combo box with info panel
             JPanel yearInfoPanel = new JPanel(new GridLayout(1, 2, 0, 0));
-            yearInfoPanel.setBounds(0, 100, 500, 40);
+            yearInfoPanel.setBounds(0, 50, 500, 40);
             yearInfoPanel.setBackground(Color.gray);
             mainFrame.add(yearInfoPanel);
 

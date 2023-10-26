@@ -7,7 +7,6 @@ import java.util.Objects;
  * Initializes a new instance of the Song record
  * The constructor checks if any provided string is null or blank and throws an exception
  *
- * @throws IllegalArgumentException if any field is null or blank
  */
 public record Song(String trackName, String artistsName, String releasedYear, String releasedMonth,
                    String releasedDay, String totalNumberOfStreamsOnSpotify) {

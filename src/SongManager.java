@@ -232,7 +232,7 @@ class SongManager implements SongManagerInterface {
             return false;
         }
     }
-    private static String commaNumberFormatter(String number) {
+    public static String commaNumberFormatter(String number) {
         StringBuilder numWithCommas = new StringBuilder(number);
         for (int i = number.length() - 3; i > 0; i -= 3) {
             numWithCommas.insert(i, ",");
