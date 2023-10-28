@@ -49,11 +49,11 @@ public class GUIFrame {
             mainFrame.add(songInfoPanel);
 
             //add label and textfield for songs
-            JTextField trackPanel = createLabelTextField(songInfoPanel, "Track Name:", "trackName");
-            JTextField artistPanel = createLabelTextField(songInfoPanel, "Artist(s):", "artistName");
-            JTextField datePanel = createLabelTextField(songInfoPanel, "Released Date:", "releasedDate");
-            JTextField streamsPanel = createLabelTextField(songInfoPanel, "Total Streams:", "totalStreams");
-            JTextField dancePanel = createLabelTextField(songInfoPanel, "Danceability %:", "danceability");
+            createLabelTextField(songInfoPanel, "Track Name:", "trackName");
+            createLabelTextField(songInfoPanel, "Artist(s):", "artistName");
+            createLabelTextField(songInfoPanel, "Released Date:", "releasedDate");
+            createLabelTextField(songInfoPanel, "Total Streams:", "totalStreams");
+            createLabelTextField(songInfoPanel, "Danceability %:", "danceability");
 
 
             //Create combo box with info panel
