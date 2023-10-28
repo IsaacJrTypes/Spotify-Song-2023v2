@@ -105,28 +105,8 @@ public class GUIFrame {
                         songTraverser = 0;
 
                         //get and set Label, title
-                      JLabel songInfoLabel =  getLabelByName(yearInfoPanel,"songStats");
-                        if (songInfoLabel != null) {
-                            int songsInYear = manager.getSongCount(selectedYear);
-                            int totalSongs = manager.getSongCount();
-                            double percentage = roundToHundredths(((double) songsInYear / totalSongs));
-                            //set %, song in year, total songs
-                            songInfoLabel.setText(percentage+"% | "+songsInYear +" of "+ totalSongs+ " total songs");
-
-                            int songNum = songTraverser+1;
-                            mainFrame.setTitle("Songs | "+songNum+ " of "+songsInYear+" songs");
-                        } else {
-                            throw new RuntimeException("Can't find label");
-                        }
-
-
-                        //setPanels
-                        trackPanel.setText(copySongsArr[songTraverser].getTrackName());
-                        artistPanel.setText(copySongsArr[songTraverser].getArtistName());
-                        datePanel.setText(copySongsArr[songTraverser].getReleaseDate());
-                        streamsPanel.setText(copySongsArr[songTraverser].getTotalStreams());
-                        dancePanel.setText(copySongsArr[songTraverser].getDanceability());
-
+                        generateSongLabelStats(yearInfoPanel, selectedYear, mainFrame);
+                        setSongInfoPanel(songInfoPanel,copySongsArr,songTraverser);
                     }
 
                 }
@@ -147,26 +127,12 @@ public class GUIFrame {
                             songTraverser++;
                             //System.out.println(songTraverser);
                             //setPanels
-                            trackPanel.setText(manager.getSong(yearIndex,songTraverser).getTrackName());
-                            artistPanel.setText(manager.getSong(yearIndex,songTraverser).getArtistName());
-                            datePanel.setText(manager.getSong(yearIndex,songTraverser).getReleaseDate());
-                            streamsPanel.setText(manager.getSong(yearIndex,songTraverser).getTotalStreams());
-                            dancePanel.setText(manager.getSong(yearIndex,songTraverser).getDanceability());
+                            setSongInfoPanel(songInfoPanel,manager.getSongs(yearIndex),songTraverser);
+
                         }
                         //get and set Label, title
-                        JLabel songInfoLabel =  getLabelByName(yearInfoPanel,"songStats");
-                        if (songInfoLabel != null) {
-                            int songsInYear = manager.getSongCount(selectedYear);
-                            int totalSongs = manager.getSongCount();
-                            double percentage = roundToHundredths(((double) songsInYear / totalSongs));
-                            //set %, song in year, total songs
-                            songInfoLabel.setText(percentage+"% | "+songsInYear +" of "+ totalSongs+ " total songs");
 
-                            int songNum = songTraverser+1;
-                            mainFrame.setTitle("Songs | "+songNum+ " of "+songsInYear+" songs");
-                        } else {
-                            throw new RuntimeException("Can't find label");
-                        }
+                        generateSongLabelStats(yearInfoPanel, selectedYear, mainFrame);
                     }
                 }
             });
@@ -184,28 +150,11 @@ public class GUIFrame {
 
                         if (songTraverser > 0 ) {
                             songTraverser--;
-                            //System.out.println(songTraverser);
                             //setPanels
-                            trackPanel.setText(manager.getSong(yearIndex,songTraverser).getTrackName());
-                            artistPanel.setText(manager.getSong(yearIndex,songTraverser).getArtistName());
-                            datePanel.setText(manager.getSong(yearIndex,songTraverser).getReleaseDate());
-                            streamsPanel.setText(manager.getSong(yearIndex,songTraverser).getTotalStreams());
-                            dancePanel.setText(manager.getSong(yearIndex,songTraverser).getDanceability());
+                            setSongInfoPanel(songInfoPanel,manager.getSongs(yearIndex),songTraverser);
                         }
                         //get and set Label, title
-                        JLabel songInfoLabel =  getLabelByName(yearInfoPanel,"songStats");
-                        if (songInfoLabel != null) {
-                            int songsInYear = manager.getSongCount(selectedYear);
-                            int totalSongs = manager.getSongCount();
-                            double percentage = roundToHundredths(((double) songsInYear / totalSongs));
-                            //set %, song in year, total songs
-                            songInfoLabel.setText(percentage+"% | "+songsInYear +" of "+ totalSongs+ " total songs");
-
-                            int songNum = songTraverser+1;
-                            mainFrame.setTitle("Songs | "+songNum+ " of "+songsInYear+" songs");
-                        } else {
-                            throw new RuntimeException("Can't find label");
-                        }
+                        generateSongLabelStats(yearInfoPanel, selectedYear, mainFrame);
                     }
                 }
             });
@@ -223,6 +172,39 @@ public class GUIFrame {
 
 
     }
+
+    private void generateSongLabelStats(JPanel yearInfoPanel, String selectedYear, JFrame mainFrame) {
+        JLabel songInfoLabel = getLabelByName(yearInfoPanel, "songStats");
+        if (songInfoLabel != null) {
+            int songsInYear = manager.getSongCount(selectedYear);
+            int totalSongs = manager.getSongCount();
+            double percentage = roundToHundredths(((double) songsInYear / totalSongs));
+//set %, song in year, total songs
+            songInfoLabel.setText(percentage + "% | " + songsInYear + " of " + totalSongs + " total songs");
+
+            int songNum = songTraverser + 1;
+            mainFrame.setTitle("Songs | " + songNum + " of " + songsInYear + " songs");
+        } else {
+            throw new RuntimeException("Can't find label");
+        }
+    }
+
+    //setPanels
+    private static void setSongInfoPanel (Container songinfoPanel, Song[] copySongsArr, int songTraverser) throws NullPointerException {
+
+
+            getTextFieldByName(songinfoPanel, "trackName").setText(copySongsArr[songTraverser].getTrackName());
+            getTextFieldByName(songinfoPanel, "trackName").setCaretPosition(0);
+
+            getTextFieldByName(songinfoPanel, "artistName").setText(copySongsArr[songTraverser].getArtistName());
+            getTextFieldByName(songinfoPanel, "artistName").setCaretPosition(0);
+
+            getTextFieldByName(songinfoPanel, "releasedDate").setText(copySongsArr[songTraverser].getReleaseDate());
+            getTextFieldByName(songinfoPanel, "totalStreams").setText(copySongsArr[songTraverser].getTotalStreams());
+            getTextFieldByName(songinfoPanel, "danceability").setText(copySongsArr[songTraverser].getDanceability());
+
+
+    }
     /**
      * Create label and text field panel with given label and name
      *
@@ -234,6 +216,7 @@ public class GUIFrame {
     private static JTextField createLabelTextField(JPanel songInfoPanel, String label, String setName) {
         JLabel trackLabel = new JLabel(label);
         JTextField trackField = new JTextField("", 0);
+
 
         trackLabel.setName(setName);
         trackField.setName(setName);
@@ -269,6 +252,14 @@ public class GUIFrame {
         for (Component component : container.getComponents()) {
             if (component instanceof JLabel && name.equals(component.getName())) {
                 return (JLabel) component;
+            }
+        }
+        return null;
+    }
+    public static JTextField getTextFieldByName(Container container,String name) {
+        for (Component component: container.getComponents()) {
+            if(component instanceof JTextField && name.equals(component.getName())) {
+                return (JTextField) component;
             }
         }
         return null;
